@@ -2,6 +2,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { CustomValidators } from '../_helpers/custom-validators';
+import { User } from '../models/user';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-angular-form',
@@ -41,9 +43,40 @@ export class AngularFormComponent implements OnInit {
   onSubmit(): void {
     this.submitted = true;
     if (this.form.valid) {
-      console.log(this.email.value);
-      console.log(this.password.value);
-      console.log(this.subscription.value);
+      const formData = {
+        email: this.email.value,
+        password: this.password.value,
+        subscription: this.subscription.value,
+        subscriptionStart: new Date(Date.now()),
+      };
+
+      // Convert form data to JSON and download file
+      // const jsonFormData = JSON.stringify(formData);
+      // let file = new Blob([jsonFormData], { type: 'application/json' });
+      // let a = document.createElement('a');
+      // let url = URL.createObjectURL(file);
+      // a.href = url;
+      // a.download = jsonFormData;
+      // document.body.appendChild(a);
+      // a.click();
+      // setTimeout(function () {
+      //   document.body.removeChild(a);
+      //   window.URL.revokeObjectURL(url);
+      // }, 0);
+
+      // Save form data to users.ts for output table.
+      const newUser = new User(
+        formData.email,
+        formData.subscription,
+        formData.password,
+        formData.subscriptionStart
+      );
+
+      this.userService.addUser(newUser);
+      this.userService.saveToLocalStorage();
+
+      this.form.reset();
+      this.submitted = false;
     }
   }
 
@@ -69,7 +102,7 @@ export class AngularFormComponent implements OnInit {
     return this.form.get('subscription') as FormControl;
   }
 
-  constructor() {}
+  constructor(public userService: UserService) {}
 
   ngOnInit(): void {}
 }

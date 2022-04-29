@@ -1,6 +1,33 @@
 <div class="container-fluid mt-3">
   <h1>User Form</h1>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div *ngIf="form.touched && form.errors">
+      <ul>
+        <li *ngIf="email.touched && email.hasError('required')">
+          Email is required.
+        </li>
+        <li *ngIf="email.touched && email.hasError('email')">
+          Email must be valid.
+        </li>
+        <li *ngIf="password.touched && password.hasError('required')">
+          Password is required.
+        </li>
+        <li *ngIf="password.touched && password.hasError('minlength')">
+          Password must be at least 8 characters.
+        </li>
+        <li *ngIf="password.touched && password.hasError('pattern')">
+          Password must contain at least 1 special character.
+        </li>
+        <li
+          *ngIf="
+            passwordVerification.touched &&
+            form.hasError('passwordsNotMatching')
+          "
+        >
+          Passwords must match.
+        </li>
+      </ul>
+    </div>
     <div class="mb-2">
       <label for="email" class="form-label">Email</label>
       <input type="email" formControlName="email" class="form-control" />
@@ -81,3 +108,5 @@
     </div>
   </form>
 </div>
+
+<app-output-table></app-output-table>
