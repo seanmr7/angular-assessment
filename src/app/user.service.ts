@@ -12,6 +12,8 @@ export class UserService {
   }
 
   getUsers() {
+    this.getFromLocalStorage();
+    console.log(this.users);
     return this.users;
   }
 
@@ -21,6 +23,7 @@ export class UserService {
 
   getFromLocalStorage() {
     if (localStorage.getItem('users') !== null) {
+      console.log(JSON.parse(localStorage.getItem('users') || '{}'));
       this.users = JSON.parse(localStorage.getItem('users') || '{}');
     }
   }
