@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { CustomValidators } from '../_helpers/custom-validators';
@@ -12,6 +12,7 @@ export class AngularFormComponent implements OnInit {
   submitted = false;
   subscriptions = ['Basic', 'Advanced', 'Pro'];
   default = 'Advanced';
+  regExp = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
   form: FormGroup = new FormGroup(
     {
@@ -19,14 +20,16 @@ export class AngularFormComponent implements OnInit {
       password: new FormControl(null, [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern('[^A-Za-z0-9]'),
+        Validators.pattern(this.regExp),
       ]),
       passwordVerification: new FormControl(null, [Validators.required]),
       subscription: new FormControl(this.subscriptions[1], [
         Validators.required,
       ]),
     },
-    { validators: CustomValidators.passwordsMatching }
+    {
+      validators: CustomValidators.passwordsMatching,
+    }
   );
 
   changeSubscription(e: any) {
@@ -37,15 +40,20 @@ export class AngularFormComponent implements OnInit {
 
   onSubmit(): void {
     this.submitted = true;
-    if (this.form.invalid) {
-      return;
+    if (this.form.valid) {
+      console.log(this.email.value);
+      console.log(this.password.value);
+      console.log(this.subscription.value);
     }
-    console.log('Submitted');
   }
 
-  onReset(): void {
-    this.submitted = false;
-    this.form.reset();
+  onReset(e: any): void {
+    e.preventDefault();
+    if (window.confirm('Are you sure you want to clear the form?')) {
+      this.submitted = false;
+      this.form.reset();
+      this.form.get('subscription')?.setValue('Advanced');
+    }
   }
 
   get email(): FormControl {
