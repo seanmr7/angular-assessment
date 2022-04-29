@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { User } from '../models/user';
+import { CustomValidators } from '../_helpers/custom-validators';
 
 @Component({
   selector: 'app-angular-form',
@@ -9,18 +9,31 @@ import { User } from '../models/user';
   styleUrls: ['./angular-form.component.css'],
 })
 export class AngularFormComponent implements OnInit {
-  form: FormGroup = this.formBuilder.group({
-    email: ['', Validators.required],
-    password: [
-      '',
-      Validators.required,
-      Validators.minLength(8),
-      Validators.pattern('[^A-Za-z0-9]'),
-    ],
-    passwordVerification: ['', Validators.required],
-  });
-
   submitted = false;
+  subscriptions = ['Basic', 'Advanced', 'Pro'];
+  default = 'Advanced';
+
+  form: FormGroup = new FormGroup(
+    {
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      password: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern('[^A-Za-z0-9]'),
+      ]),
+      passwordVerification: new FormControl(null, [Validators.required]),
+      subscription: new FormControl(this.subscriptions[1], [
+        Validators.required,
+      ]),
+    },
+    { validators: CustomValidators.passwordsMatching }
+  );
+
+  changeSubscription(e: any) {
+    this.subscription?.setValue(e.target.value, {
+      onlySelf: true,
+    });
+  }
 
   onSubmit(): void {
     this.submitted = true;
@@ -35,17 +48,20 @@ export class AngularFormComponent implements OnInit {
     this.form.reset();
   }
 
-  constructor(private formBuilder: FormBuilder) {}
+  get email(): FormControl {
+    return this.form.get('email') as FormControl;
+  }
+  get password(): FormControl {
+    return this.form.get('password') as FormControl;
+  }
+  get passwordVerification(): FormControl {
+    return this.form.get('passwordVerification') as FormControl;
+  }
+  get subscription(): FormControl {
+    return this.form.get('subscription') as FormControl;
+  }
 
-  // subscriptions = ['Basic', 'Advanced', 'Pro'];
-
-  // userForm = this.formBuilder.group({
-  //   email: '',
-  // });
-
-  // onSubmit() {
-  //   console.log('Form submitted');
-  // }
+  constructor() {}
 
   ngOnInit(): void {}
 }
