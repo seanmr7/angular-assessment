@@ -84,10 +84,12 @@ export class AngularFormComponent implements OnInit {
 
   onReset(e: any): void {
     e.preventDefault();
-    if (window.confirm('Are you sure you want to clear the form?')) {
-      this.submitted = false;
-      this.form.reset();
-      this.form.get('subscription')?.setValue('Advanced');
+    if (this.form.touched) {
+      if (window.confirm('Are you sure you want to clear the form?')) {
+        this.submitted = false;
+        this.form.reset();
+        this.form.get('subscription')?.setValue('Advanced');
+      }
     }
   }
 
