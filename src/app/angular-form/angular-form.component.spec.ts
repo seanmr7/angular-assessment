@@ -30,6 +30,11 @@ describe('AngularFormComponent', () => {
     expect(inputElements.length).toEqual(3);
   });
 
+  it('should set the default value of subscription to be Advanced', () => {
+    const subscription = component.form.get('subscription');
+    expect(subscription?.value).toEqual('Advanced');
+  });
+
   it('should mark email field as invalid when input has incorrect value', () => {
     const email = component.form.get('email');
 
