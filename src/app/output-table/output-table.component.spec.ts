@@ -8,9 +8,8 @@ describe('OutputTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OutputTableComponent ]
-    })
-    .compileComponents();
+      declarations: [OutputTableComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -21,5 +20,13 @@ describe('OutputTableComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call getUsers when the component is loaded', () => {
+    const fnc = spyOn(component, 'getUsers');
+
+    component.ngOnInit();
+
+    expect(fnc).toHaveBeenCalled();
   });
 });

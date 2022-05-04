@@ -15,6 +15,7 @@ export class AngularFormComponent implements OnInit {
   subscriptions = ['Basic', 'Advanced', 'Pro'];
   default = 'Advanced';
   regExp = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  regExpCapital = /^[A-Z].*$/;
 
   form: FormGroup = new FormGroup(
     {
@@ -23,6 +24,7 @@ export class AngularFormComponent implements OnInit {
         Validators.required,
         Validators.minLength(8),
         Validators.pattern(this.regExp),
+        Validators.pattern(this.regExpCapital),
       ]),
       passwordVerification: new FormControl(null, [Validators.required]),
       subscription: new FormControl(this.subscriptions[1], [
@@ -51,18 +53,18 @@ export class AngularFormComponent implements OnInit {
       };
 
       // Convert form data to JSON and download file
-      // const jsonFormData = JSON.stringify(formData);
-      // let file = new Blob([jsonFormData], { type: 'application/json' });
-      // let a = document.createElement('a');
-      // let url = URL.createObjectURL(file);
-      // a.href = url;
-      // a.download = jsonFormData;
-      // document.body.appendChild(a);
-      // a.click();
-      // setTimeout(function () {
-      //   document.body.removeChild(a);
-      //   window.URL.revokeObjectURL(url);
-      // }, 0);
+      const jsonFormData = JSON.stringify(formData);
+      let file = new Blob([jsonFormData], { type: 'application/json' });
+      let a = document.createElement('a');
+      let url = URL.createObjectURL(file);
+      a.href = url;
+      a.download = jsonFormData;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 0);
 
       // Save form data to users.ts for output table.
       const newUser = new User(

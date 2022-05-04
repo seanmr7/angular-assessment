@@ -1,6 +1,6 @@
 <div class="container-fluid mt-3">
   <h1>User Form</h1>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form id="form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div *ngIf="form.touched && form.errors">
       <ul>
         <li *ngIf="email.touched && email.hasError('required')">
@@ -63,7 +63,8 @@
         *ngIf="password.touched && password.hasError('pattern')"
         class="text-danger mt-2"
       >
-        *Password must contain at least 1 special character.
+        *Password must contain at least 1 special character and 1 capital
+        letter.
       </div>
     </div>
     <div class="mb-2">
